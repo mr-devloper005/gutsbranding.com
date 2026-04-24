@@ -2,10 +2,10 @@ import type { TaskKey } from '@/lib/site-config'
 
 export const siteContent = {
   navbar: {
-    tagline: 'Independent reading platform',
+    tagline: 'Investigations, analysis, and essays',
   },
   footer: {
-    tagline: 'Stories, resources, and discoverable posts',
+    tagline: 'Independent reporting for public understanding',
   },
   hero: {
     badge: 'Latest stories and visuals',
@@ -29,44 +29,44 @@ export const siteContent = {
   },
   home: {
     metadata: {
-      title: 'Stories, visuals, and discoverable content',
+      title: 'Civic Ledger | Investigations, analysis, and ideas',
       description:
-        'Explore articles, images, listings, and curated posts through a cleaner reading-first experience.',
-      openGraphTitle: 'Stories, visuals, and discoverable content',
+        'Read original reporting and expert analysis on policy, technology, business, climate, and culture.',
+      openGraphTitle: 'Civic Ledger | Independent journalism and analysis',
       openGraphDescription:
-        'Discover articles, visual posts, and connected content through a calmer reading-first experience.',
-      keywords: ['story platform', 'article site', 'visual content', 'content discovery'],
+        'A real-world article publication for readers who want context, evidence, and clarity.',
+      keywords: ['journalism', 'analysis', 'long form reporting', 'opinion', 'public policy'],
     },
-    introBadge: 'About the platform',
-    introTitle: 'Built for reading, browsing, and connecting different kinds of content.',
+    introBadge: 'About the newsroom',
+    introTitle: 'Built for readers who want depth, not noise.',
     introParagraphs: [
-      'This site brings together article-style reading, visual browsing, and structured discovery so visitors can move naturally between different content types.',
-      'Instead of separating stories, visuals, and supporting resources into disconnected surfaces, the platform keeps them connected in one place with consistent navigation and easier exploration.',
-      'Whether someone starts with a story, an image-led post, a listing, or a resource page, they can keep discovering related content without friction.',
+      'Civic Ledger publishes reported stories, explainers, opinion essays, and accountability journalism.',
+      'Our editorial desk focuses on verifiable facts, rigorous sourcing, and human-centered storytelling.',
+      'Readers can move from headline context to in-depth analysis without distraction.',
     ],
     sideBadge: 'At a glance',
     sidePoints: [
-      'Reading-first homepage with stronger emphasis on stories and imagery.',
-      'Connected sections for articles, visuals, listings, and supporting resources.',
-      'Cleaner browsing rhythm designed to make exploration feel easier.',
-      'Lightweight interactions that keep the experience fast and readable.',
+      'Original reporting from experienced contributors.',
+      'Daily analysis on policy, technology, business, and climate.',
+      'Opinion and commentary with transparent editorial standards.',
+      'Calm reading design optimized for long-form sessions.',
     ],
     primaryLink: {
-      label: 'Browse articles',
+      label: 'Read Latest Stories',
       href: '/articles',
     },
     secondaryLink: {
-      label: 'See visuals',
-      href: '/images',
+      label: 'Meet The Team',
+      href: '/team',
     },
   },
   cta: {
-    badge: 'Start exploring',
-    title: 'Explore articles, visuals, and resources through one connected experience.',
+    badge: 'Join the readership',
+    title: 'Get thoughtful journalism in your daily reading habit.',
     description:
-      'Move between articles, image-led posts, listings, and resources through one clearer and more connected visual system.',
+      'Create an account to save stories, follow authors, and receive new investigations as they publish.',
     primaryCta: {
-      label: 'Get Started Free',
+      label: 'Create Reader Account',
       href: '/register',
     },
     secondaryCta: {
@@ -80,8 +80,8 @@ export const siteContent = {
 
 export const taskPageMetadata: Record<Exclude<TaskKey, 'comment' | 'org' | 'social'>, { title: string; description: string }> = {
   article: {
-    title: 'Articles and stories',
-    description: 'Read articles, stories, guides, and long-form posts across topics and interests.',
+    title: 'Latest articles and reported features',
+    description: 'Read original reporting, analysis, opinion, and long-form features from Civic Ledger.',
   },
   listing: {
     title: 'Listings and discoverable pages',
@@ -100,12 +100,12 @@ export const taskPageMetadata: Record<Exclude<TaskKey, 'comment' | 'org' | 'soci
     description: 'Discover public profiles, brand pages, and identity-focused posts in one place.',
   },
   sbm: {
-    title: 'Curated links and saved resources',
-    description: 'Browse useful links, saved references, and curated resources organized for discovery.',
+    title: 'Social desk and curated references',
+    description: 'Track social briefings, saved references, and curated link sets.',
   },
   pdf: {
-    title: 'PDFs and downloadable resources',
-    description: 'Open reports, documents, and downloadable resources shared across the platform.',
+    title: 'Document vault and downloadable PDFs',
+    description: 'Open reports, handbooks, and downloadable document resources.',
   },
 }
 
@@ -127,17 +127,13 @@ export const taskIntroCopy: Record<
     ],
   },
   article: {
-    title: 'Articles, stories, and long-form reading',
+    title: 'Reported stories, analysis, and opinion',
     paragraphs: [
-      'This section is built for stories, explainers, guides, and long-form reading across topics and interests.',
-      'Articles connect with listings, images, resources, and other content types so deeper reading can lead naturally into related discovery.',
-      'Use this section to browse thoughtful posts, revisit useful writing, and move into supporting content when you want more context.',
+      'Our article desk publishes daily reporting, expert analysis, and context-rich opinion essays.',
+      'Coverage spans public policy, technology, business, climate, and culture.',
+      'Every article is edited for clarity, evidence, and reader-first depth.',
     ],
-    links: [
-      { label: 'Explore listings', href: '/listings' },
-      { label: 'Open images', href: '/images' },
-      { label: 'Browse resources', href: '/pdf' },
-    ],
+    links: [],
   },
   classified: {
     title: 'Classifieds, offers, and timely updates',

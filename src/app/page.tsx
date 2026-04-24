@@ -11,7 +11,7 @@ import { buildPageMetadata } from '@/lib/seo'
 import { fetchTaskPosts } from '@/lib/task-data'
 import { siteContent } from '@/config/site.content'
 import { getFactoryState } from '@/design/factory/get-factory-state'
-import { getProductKind, type ProductKind } from '@/design/factory/get-product-kind'
+import { getProductKind } from '@/design/factory/get-product-kind'
 import type { SitePost } from '@/lib/site-connector'
 import { HOME_PAGE_OVERRIDE_ENABLED, HomePageOverride } from '@/overrides/home-page'
 
@@ -39,6 +39,10 @@ const taskIcons: Record<TaskKey, any> = {
   classified: Tag,
   image: ImageIcon,
   profile: User,
+  social: LayoutGrid,
+  pdf: FileText,
+  org: Building2,
+  comment: FileText,
 }
 
 function resolveTaskKey(value: unknown, fallback: TaskKey): TaskKey {
@@ -101,14 +105,14 @@ function getDirectoryTone(brandPack: string) {
 
 function getEditorialTone() {
   return {
-    shell: 'bg-[#fbf6ee] text-[#241711]',
-    panel: 'border border-[#dcc8b7] bg-[#fffdfa] shadow-[0_24px_60px_rgba(77,47,27,0.08)]',
-    soft: 'border border-[#e6d6c8] bg-[#fff4e8]',
-    muted: 'text-[#6e5547]',
-    title: 'text-[#241711]',
-    badge: 'bg-[#241711] text-[#fff1e2]',
-    action: 'bg-[#241711] text-[#fff1e2] hover:bg-[#3a241b]',
-    actionAlt: 'border border-[#dcc8b7] bg-transparent text-[#241711] hover:bg-[#f5e7d7]',
+    shell: 'bg-transparent text-[#25343f]',
+    panel: 'atelier-panel',
+    soft: 'glass-ribbon border border-[#bfc9d1]',
+    muted: 'text-[#4a5e6d]',
+    title: 'text-[#25343f]',
+    badge: 'glass-ribbon text-[#25343f]',
+    action: 'bg-[#25343f] text-[#eaefef] hover:bg-[#1d2a33]',
+    actionAlt: 'border border-[#bfc9d1] bg-transparent text-[#25343f] hover:bg-[#dce3e7]',
   }
 }
 
@@ -247,14 +251,14 @@ function DirectoryHome({ primaryTask, enabledTasks, listingPosts, classifiedPost
           <div className="grid gap-4 md:grid-cols-2">
             {(profilePosts.length ? profilePosts : classifiedPosts).slice(0, 4).map((post) => {
               const meta = getPostMeta(post)
-              const taskKey = resolveTaskKey(post.task, profilePosts.length ? 'profile' : 'classified')
+              const taskKey = profilePosts.length ? 'profile' : 'classified'
               return (
                 <Link key={post.id} href={getTaskHref(taskKey, post.slug)} className={`overflow-hidden rounded-[1.8rem] ${tone.panel}`}>
                   <div className="relative h-44 overflow-hidden">
                     <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" />
                   </div>
                   <div className="p-5">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.24em] opacity-70">{meta.category || post.task || 'Profile'}</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.24em] opacity-70">{meta.category || (profilePosts.length ? 'Profile' : 'Classified')}</p>
                     <h3 className="mt-2 text-xl font-semibold">{post.title}</h3>
                     <p className={`mt-2 text-sm leading-7 ${tone.muted}`}>{post.summary || 'Quick access to local information and related surfaces.'}</p>
                   </div>
@@ -268,39 +272,100 @@ function DirectoryHome({ primaryTask, enabledTasks, listingPosts, classifiedPost
   )
 }
 
-function EditorialHome({ primaryTask, articlePosts, supportTasks }: { primaryTask?: EnabledTask; articlePosts: SitePost[]; supportTasks: EnabledTask[] }) {
+function EditorialHome({
+  primaryTask,
+  secondaryTask,
+  articlePosts,
+  lowPriorityTasks,
+}: {
+  primaryTask?: EnabledTask
+  secondaryTask?: EnabledTask
+  articlePosts: SitePost[]
+  lowPriorityTasks: EnabledTask[]
+}) {
   const tone = getEditorialTone()
+  type FocusCard = { key: string; label: string; route: string; description: string }
   const lead = articlePosts[0]
   const side = articlePosts.slice(1, 5)
+  const fallbackIssue = [
+    {
+      id: 'issue-fallback-1',
+      slug: 'rents-rising-faster-than-wages-in-mid-sized-cities',
+      title: 'Rents are rising faster than wages in mid-sized cities',
+      summary: 'New labor and housing data shows why affordability pressure is shifting away from the largest metros.',
+    },
+    {
+      id: 'issue-fallback-2',
+      slug: 'inside-the-next-wave-of-public-transit-overhauls',
+      title: 'Inside the next wave of public transit overhauls',
+      summary: 'Agency plans reveal where upgrades will happen first and which routes still face structural delays.',
+    },
+    {
+      id: 'issue-fallback-3',
+      slug: 'who-pays-for-climate-adaptation-after-extreme-weather',
+      title: 'Who pays for climate adaptation after extreme weather?',
+      summary: 'As flood and heat risks grow, cities are rewriting long-term budgets around resilience financing.',
+    },
+  ]
+  const issueItems = side.length ? side : fallbackIssue
+  const focusTasks = [primaryTask, secondaryTask].filter((task): task is EnabledTask => Boolean(task))
+  const focusCards: FocusCard[] = focusTasks.length
+    ? focusTasks.map((task) => ({ key: task.key, label: task.label, route: task.route, description: task.description }))
+    : [
+        {
+          key: 'fallback-articles',
+          label: 'Articles',
+          route: '/articles',
+          description: 'Investigations, explainers, opinion, and long-form reporting.',
+        },
+      ]
+  const fallbackArticleTeasers = [
+    {
+      title: 'Why city budgets are becoming the next major election issue',
+      slug: 'why-city-budgets-are-becoming-the-next-major-election-issue',
+    },
+    {
+      title: 'The school funding gap hidden inside district reporting',
+      slug: 'the-school-funding-gap-hidden-inside-district-reporting',
+    },
+    {
+      title: 'How hospitals are preparing for a hotter decade',
+      slug: 'how-hospitals-are-preparing-for-a-hotter-decade',
+    },
+  ]
+  const articleTeasers = issueItems.slice(0, 3).map((item) => ({ title: item.title, slug: item.slug }))
 
   return (
     <main className={tone.shell}>
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-18">
         <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
-          <div>
+          <div className="relative">
+            <div className="pointer-events-none absolute -left-6 -top-6 hidden h-24 w-24 rounded-full border border-[#bfc9d1] bg-white/55 lg:block" />
             <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] ${tone.badge}`}>
               <FileText className="h-3.5 w-3.5" />
-              Reading-first publication
+              Premium editorial desk
             </span>
             <h1 className={`mt-6 max-w-4xl text-5xl font-semibold tracking-[-0.06em] sm:text-6xl ${tone.title}`}>
-              Essays, analysis, and slower reading designed like a publication, not a dashboard.
+              Long-form reporting with a front page built for trust, depth, and citation-led reading.
             </h1>
             <p className={`mt-6 max-w-2xl text-base leading-8 ${tone.muted}`}>{SITE_CONFIG.description}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href={primaryTask?.route || '/articles'} className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.action}`}>
-                Start reading
+                Open Journal
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/about" className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.actionAlt}`}>
-                About the publication
-              </Link>
+              {secondaryTask ? (
+                <Link href={secondaryTask.route} className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.actionAlt}`}>
+                  {secondaryTask.label}
+                </Link>
+              ) : null}
             </div>
           </div>
 
-          <aside className={`rounded-[2rem] p-6 ${tone.panel}`}>
+          <aside className={`angled-edge rounded-[2rem] p-6 ${tone.panel}`}>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Inside this issue</p>
             <div className="mt-5 space-y-5">
-              {side.map((post) => (
+              {issueItems.map((post) => (
                 <Link key={post.id} href={`/articles/${post.slug}`} className="block border-b border-black/10 pb-5 last:border-b-0 last:pb-0">
                   <p className="text-sm font-semibold uppercase tracking-[0.18em] opacity-60">Feature</p>
                   <h3 className="mt-2 text-xl font-semibold">{post.title}</h3>
@@ -312,10 +377,11 @@ function EditorialHome({ primaryTask, articlePosts, supportTasks }: { primaryTas
         </div>
 
         {lead ? (
-          <div className={`mt-12 overflow-hidden rounded-[2.5rem] ${tone.panel}`}>
+          <div className={`angled-edge mt-12 overflow-hidden rounded-[2.5rem] ${tone.panel}`}>
             <div className="grid lg:grid-cols-[1.05fr_0.95fr]">
               <div className="relative min-h-[360px] overflow-hidden">
                 <ContentImage src={getPostImage(lead)} alt={lead.title} fill className="object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#25343f]/45 via-transparent to-transparent" />
               </div>
               <div className="p-8 lg:p-10">
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Lead story</p>
@@ -330,14 +396,36 @@ function EditorialHome({ primaryTask, articlePosts, supportTasks }: { primaryTas
           </div>
         ) : null}
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {supportTasks.slice(0, 3).map((task) => (
-            <Link key={task.key} href={task.route} className={`rounded-[1.8rem] p-6 ${tone.soft}`}>
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
+          {focusCards.map((task) => (
+            <Link key={task.key} href={task.route} className={`rounded-[1.8rem] p-6 transition-transform duration-300 hover:-translate-y-1 ${tone.soft}`}>
               <h3 className="text-xl font-semibold">{task.label}</h3>
               <p className={`mt-3 text-sm leading-7 ${tone.muted}`}>{task.description}</p>
+              {task.key === 'fallback-articles' || task.key === 'article' ? (
+                <div className="mt-4 space-y-2 border-t border-[#bfc9d1] pt-4">
+                  {(articleTeasers.length ? articleTeasers : fallbackArticleTeasers).map((story) => (
+                    <span key={story.slug} className="block text-sm font-medium text-[#25343f]">
+                      {story.title}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
             </Link>
           ))}
         </div>
+
+        {lowPriorityTasks.length ? (
+          <div className={`mt-8 rounded-[1.8rem] p-6 ${tone.panel}`}>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Additional sections</p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {lowPriorityTasks.map((task) => (
+                <Link key={`low-${task.key}`} href={task.route} className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${tone.actionAlt}`}>
+                  {task.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        ) : null}
       </section>
     </main>
   )
@@ -375,7 +463,7 @@ function VisualHome({ primaryTask, imagePosts, profilePosts, articlePosts }: { p
             {gallery.slice(0, 5).map((post, index) => (
               <Link
                 key={post.id}
-                href={getTaskHref(resolveTaskKey(post.task, 'image'), post.slug)}
+                href={getTaskHref('image', post.slug)}
                 className={index === 0 ? `col-span-2 row-span-2 overflow-hidden rounded-[2.4rem] ${tone.panel}` : `overflow-hidden rounded-[1.8rem] ${tone.soft}`}
               >
                 <div className={index === 0 ? 'relative h-[360px]' : 'relative h-[170px]'}>
@@ -440,7 +528,7 @@ function CurationHome({ primaryTask, bookmarkPosts, profilePosts, articlePosts }
 
           <div className="grid gap-4 md:grid-cols-2">
             {collections.map((post) => (
-              <Link key={post.id} href={getTaskHref(resolveTaskKey(post.task, 'sbm'), post.slug)} className={`rounded-[1.8rem] p-6 ${tone.panel}`}>
+              <Link key={post.id} href={getTaskHref('sbm', post.slug)} className={`rounded-[1.8rem] p-6 ${tone.panel}`}>
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Collection</p>
                 <h3 className="mt-3 text-2xl font-semibold">{post.title}</h3>
                 <p className={`mt-3 text-sm leading-8 ${tone.muted}`}>{post.summary || 'A calmer bookmark surface with room for context and grouping.'}</p>
@@ -490,7 +578,8 @@ export default async function HomePage() {
   ).filter(({ posts }) => posts.length)
 
   const primaryTask = enabledTasks.find((task) => task.key === recipe.primaryTask) || enabledTasks[0]
-  const supportTasks = enabledTasks.filter((task) => task.key !== primaryTask?.key)
+  const secondaryTask = enabledTasks.find((task) => task.key !== primaryTask?.key)
+  const supportTasks = enabledTasks.filter((task) => task.key !== primaryTask?.key && task.key !== secondaryTask?.key)
   const listingPosts = taskFeed.find(({ task }) => task.key === 'listing')?.posts || []
   const classifiedPosts = taskFeed.find(({ task }) => task.key === 'classified')?.posts || []
   const articlePosts = taskFeed.find(({ task }) => task.key === 'article')?.posts || []
@@ -535,7 +624,12 @@ export default async function HomePage() {
         />
       ) : null}
       {productKind === 'editorial' ? (
-        <EditorialHome primaryTask={primaryTask} articlePosts={articlePosts} supportTasks={supportTasks} />
+        <EditorialHome
+          primaryTask={primaryTask}
+          secondaryTask={secondaryTask}
+          articlePosts={articlePosts}
+          lowPriorityTasks={supportTasks}
+        />
       ) : null}
       {productKind === 'visual' ? (
         <VisualHome primaryTask={primaryTask} imagePosts={imagePosts} profilePosts={profilePosts} articlePosts={articlePosts} />
