@@ -145,7 +145,10 @@ export default function DashboardPage() {
   const totalViews = useMemo(
     () =>
       userArticles.reduce((sum, article) => sum + (article.views || 0), 0) +
-      userListings.reduce((sum, listing) => sum + (listing.views || 0), 0) +
+      userListings.reduce(
+        (sum, listing) => sum + ((listing as Listing & { views?: number }).views || 0),
+        0
+      ) +
       userAds.reduce((sum, ad) => sum + (ad.views || 0), 0),
     [userAds, userArticles, userListings]
   )
@@ -230,7 +233,7 @@ export default function DashboardPage() {
         id: listing.id,
         title: listing.title,
         status: listing.status,
-        views: listing.views ?? 0,
+        views: (listing as Listing & { views?: number }).views ?? 0,
         inquiries: 0,
         date: new Date(listing.createdAt).toLocaleDateString("en-US", {
           month: "short",

@@ -1,7 +1,69 @@
 import type { User, Article, Listing, ClassifiedAd, Comment, Bookmark, BookmarkCollection, Notification, Category, Testimonial, DashboardStats, TeamMember, CommunityEvent, CommunityGroup, PressAsset, ApiEndpoint, FAQItem, BlogPost, PressCoverage } from '@/types'
 
 // Mock Users
-export const mockUsers: User[] = []
+export const mockUsers: User[] = [
+  {
+    id: 'u1',
+    name: 'Ava Thompson',
+    email: 'ava@civicledger.com',
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop',
+    bio: 'Editor-in-chief covering governance and institutional accountability.',
+    joinedDate: '2024-01-14',
+    location: 'Washington, DC',
+    website: 'https://gutsbranding.com',
+    followers: 18240,
+    following: 214,
+    isVerified: true
+  },
+  {
+    id: 'u2',
+    name: 'Marcus Lee',
+    email: 'marcus@civicledger.com',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop',
+    bio: 'Policy reporter focused on housing, labor, and urban development.',
+    joinedDate: '2024-03-03',
+    location: 'Chicago, IL',
+    followers: 9340,
+    following: 168,
+    isVerified: true
+  },
+  {
+    id: 'u3',
+    name: 'Priya Nair',
+    email: 'priya@civicledger.com',
+    avatar: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=200&h=200&fit=crop',
+    bio: 'Technology and education correspondent.',
+    joinedDate: '2024-04-21',
+    location: 'San Francisco, CA',
+    followers: 11020,
+    following: 190,
+    isVerified: true
+  },
+  {
+    id: 'u4',
+    name: 'Daniel Brooks',
+    email: 'daniel@civicledger.com',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop',
+    bio: 'Climate desk reporter specializing in infrastructure and water systems.',
+    joinedDate: '2024-02-11',
+    location: 'Denver, CO',
+    followers: 7860,
+    following: 150,
+    isVerified: true
+  },
+  {
+    id: 'u5',
+    name: 'Elena Park',
+    email: 'elena@civicledger.com',
+    avatar: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=200&h=200&fit=crop',
+    bio: 'Audience editor and long-form features writer.',
+    joinedDate: '2024-05-09',
+    location: 'New York, NY',
+    followers: 6230,
+    following: 142,
+    isVerified: true
+  }
+]
 
 export const currentUser: User = mockUsers[0]
 
