@@ -143,6 +143,7 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
   const content = getContent(post);
   const isClassified = task === "classified";
   const isArticle = task === "article";
+  const isPdf = task === "pdf";
   const category = content.category || post.tags?.[0] || taskConfig?.label || task;
   const description = content.description || post.summary || "Details coming soon.";
   const descriptionHtml = !isArticle ? formatRichHtml(description, "Details coming soon.") : "";
@@ -167,7 +168,7 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
   const images = getImageUrls(post, content);
   const mapEmbedUrl = buildMapEmbedUrl(content.latitude, content.longitude, location);
   const isBookmark = task === "sbm" || task === "social";
-  const hideSidebar = isClassified || isArticle || task === "image" || isBookmark;
+  const hideSidebar = isClassified || isArticle || isPdf || task === "image" || isBookmark;
   const related = (await fetchTaskPosts(task, 6))
     .filter((item) => item.slug !== post.slug)
     .filter((item) => {
@@ -310,6 +311,21 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
 
             {!isArticle ? (
               <>
+                {isPdf ? (
+                  <div className="mx-auto w-full max-w-4xl rounded-[1.8rem] border border-[#bfc9d1] bg-[#f3f6f8] p-6">
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#4a5e6d]">Document briefing</p>
+                    <h2 className="mt-2 text-2xl font-semibold text-[#25343f]">Reference-ready file with metadata-first layout.</h2>
+                    <p className="mt-3 text-sm leading-7 text-[#4a5e6d]">This detail view prioritizes source clarity and quick download context instead of feed-style storytelling.</p>
+                  </div>
+                ) : null}
+
+                {isBookmark ? (
+                  <div className="mx-auto w-full max-w-4xl rounded-[1.8rem] border border-[#bfc9d1] bg-[#f6f8f9] p-6">
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#4a5e6d]">Social signal</p>
+                    <h2 className="mt-2 text-2xl font-semibold text-[#25343f]">Concise update stream with attached references.</h2>
+                  </div>
+                ) : null}
+
                 {!isBookmark ? (
                   <div className={cn(isClassified ? "w-full" : "")}>
                     <TaskImageCarousel images={images} />

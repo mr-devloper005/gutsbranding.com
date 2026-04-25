@@ -6,7 +6,6 @@ export const revalidate = 3;
 
 export const generateMetadata = () =>
   buildTaskMetadata("image", {
-    path: "/images",
     title: taskPageMetadata.image.title,
     description: taskPageMetadata.image.description,
   });

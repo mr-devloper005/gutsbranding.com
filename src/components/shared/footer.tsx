@@ -19,17 +19,14 @@ const taskIcons: Record<TaskKey, any> = {
 }
 
 const footerLinks = {
-  platform: SITE_CONFIG.tasks.filter((task) => task.enabled).map((task) => ({
+  platform: SITE_CONFIG.tasks.map((task) => ({
     name: task.label,
     href: task.route,
     icon: taskIcons[task.key] || LayoutGrid,
   })),
   company: [
-    { name: 'About', href: '/about' },
-    { name: 'Team', href: '/team' },
-    { name: 'Careers', href: '/careers' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Press', href: '/press' },
+    { name: 'About Us', href: '/about' },
+    { name: 'Contact Us', href: '/contact' },
   ],
   resources: [
     { name: 'Help Center', href: '/help' },
@@ -59,6 +56,14 @@ export function Footer() {
   const { recipe } = getFactoryState()
   const enabledTasks = SITE_CONFIG.tasks.filter((task) => task.enabled)
   const primaryTask = enabledTasks.find((task) => task.key === recipe.primaryTask) || enabledTasks[0]
+  const secondaryTask = enabledTasks.find((task) => task.key !== primaryTask?.key)
+  const emphasizedTasks = [primaryTask, secondaryTask]
+    .filter((task): task is NonNullable<typeof task> => Boolean(task))
+    .map((task) => ({ name: task.label, href: task.route }))
+    .filter((item) => typeof item.href === 'string' && item.href.length > 0)
+  const lowPriorityTasks = footerLinks.platform.filter(
+    (task) => task.href !== primaryTask?.route && task.href !== secondaryTask?.route
+  ).filter((task) => typeof task.href === 'string' && task.href.length > 0)
 
   if (recipe.footer === 'minimal-footer') {
     return (
@@ -87,8 +92,8 @@ export function Footer() {
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr_1fr]">
             <div className="rounded-[2rem] border border-white/10 bg-white/5 p-7">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/12 bg-white/8 p-1.5">
-                  <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
+                <div className="flex h-14 w-14 items-center justify-center">
+                  <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="56" height="56" className="h-full w-full object-contain" />
                 </div>
                 <div>
                   <p className="text-lg font-semibold">{SITE_CONFIG.name}</p>
@@ -140,30 +145,30 @@ export function Footer() {
 
   if (recipe.footer === 'editorial-footer') {
     return (
-      <footer className="border-t border-[#dbc6b6] bg-[linear-gradient(180deg,#fff9f0_0%,#fff1df_100%)] text-[#2f1d16]">
+      <footer className="border-t border-[#bfc9d1] bg-[radial-gradient(circle_at_12%_0%,rgba(255,155,81,0.2),transparent_28%),linear-gradient(180deg,#f7f9fa_0%,#eaf0f2_100%)] text-[#25343f]">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr_0.9fr]">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#dbc6b6] bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#72594a]">
+              <div className="glass-ribbon inline-flex items-center gap-2 rounded-full border border-[#bfc9d1] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#4a5e6d]">
                 <Sparkles className="h-3.5 w-3.5" />
                 Editorial desk
               </div>
               <h3 className="mt-5 text-3xl font-semibold tracking-[-0.04em]">{SITE_CONFIG.name}</h3>
-              <p className="mt-4 max-w-md text-sm leading-7 text-[#72594a]">{SITE_CONFIG.description}</p>
+              <p className="mt-4 max-w-md text-sm leading-7 text-[#4a5e6d]">{SITE_CONFIG.description}</p>
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b6d5a]">Sections</h4>
+              <h4 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#4a5e6d]">Sections</h4>
               <ul className="mt-4 space-y-3 text-sm">
-                {footerLinks.platform.map((item: any) => (
-                  <li key={item.name}><Link href={item.href} className="hover:text-[#2f1d16]">{item.name}</Link></li>
+                {emphasizedTasks.map((item) => (
+                  <li key={`${item.name}-${item.href}`}><Link href={item.href} className="inline-flex items-center rounded-full border border-transparent px-2 py-1 hover:border-[#bfc9d1] hover:bg-white/75 hover:text-[#25343f]">{item.name}</Link></li>
                 ))}
               </ul>
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b6d5a]">Company</h4>
+              <h4 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#4a5e6d]">Company</h4>
               <ul className="mt-4 space-y-3 text-sm">
                 {footerLinks.company.map((item) => (
-                  <li key={item.name}><Link href={item.href} className="hover:text-[#2f1d16]">{item.name}</Link></li>
+                  <li key={item.name}><Link href={item.href} className="hover:text-[#25343f]">{item.name}</Link></li>
                 ))}
               </ul>
             </div>
@@ -179,8 +184,8 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr_0.8fr]">
           <div>
             <Link href="/" className="flex items-center gap-3">
-              <div className="h-11 w-11 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1 shadow-sm">
-                <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="44" height="44" className="h-full w-full object-contain" />
+              <div className="h-14 w-14 overflow-hidden">
+                <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="56" height="56" className="h-full w-full object-contain" />
               </div>
               <div>
                 <span className="block text-lg font-semibold">{SITE_CONFIG.name}</span>

@@ -114,11 +114,11 @@ export default async function ProfileDetailPage({ params }: { params: Promise<{ 
         <section className="rounded-3xl border border-border/60 bg-white/90 p-8 shadow-sm md:p-12">
           <div className="grid gap-8 md:grid-cols-[200px_1fr] md:items-start">
             <div className="flex justify-center md:justify-start">
-              <div className="relative h-36 w-36 overflow-hidden rounded-full border border-border/70 bg-muted">
+              <div className="relative h-48 w-48 overflow-hidden">
                 {logoUrl ? (
-                  <ContentImage src={logoUrl} alt={post.title} fill className="object-cover" sizes="144px" intrinsicWidth={144} intrinsicHeight={144} />
+                  <ContentImage src={logoUrl} alt={post.title} fill className="object-contain" sizes="192px" intrinsicWidth={192} intrinsicHeight={192} />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center text-3xl font-semibold text-muted-foreground">
+                  <div className="flex h-full w-full items-center justify-center rounded-xl bg-muted text-3xl font-semibold text-muted-foreground">
                     {post.title.slice(0, 1).toUpperCase()}
                   </div>
                 )}
