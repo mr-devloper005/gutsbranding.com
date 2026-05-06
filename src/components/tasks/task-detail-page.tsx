@@ -1,7 +1,7 @@
 import { ContentImage } from "@/components/shared/content-image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { MapPin, Globe, Phone, Tag, Mail } from "lucide-react";
+import { MapPin, Globe, Phone, Tag, Mail, FileText, Bookmark, Building2, Sparkles, Download } from "lucide-react";
 import { NavbarShell } from "@/components/shared/navbar-shell";
 import { Footer } from "@/components/shared/footer";
 import { TaskPostCard } from "@/components/shared/task-post-card";
@@ -156,13 +156,6 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
     (typeof content.author === "string" && content.author.trim()) ||
     post.authorName ||
     "Editorial Team";
-  const articleDate = post.publishedAt
-    ? new Date(post.publishedAt).toLocaleDateString("en-IN", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : "";
   const postTags = Array.isArray(post.tags) ? post.tags.filter((tag) => typeof tag === "string") : [];
   const location = content.address || content.location;
   const images = getImageUrls(post, content);
@@ -268,61 +261,206 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
         >
           <div className={cn(isClassified ? "space-y-8" : "")}>
             {isArticle ? (
-              <div className="mx-auto w-full max-w-4xl space-y-6">
-                <h1 className="text-4xl font-semibold leading-tight text-foreground">
-                  {post.title}
-                </h1>
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
-                  <span>By {articleAuthor}</span>
-                  {articleDate ? <span>{articleDate}</span> : null}
-                  <Badge variant="secondary" className="inline-flex items-center gap-1">
-                    <Tag className="h-3.5 w-3.5" />
-                    {category}
-                  </Badge>
-                </div>
-                {postTags.length ? (
-                  <div className="flex flex-wrap gap-2">
-                    {postTags.map((tag) => (
-                      <Badge key={tag} variant="outline">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                ) : null}
-                {articleSummary ? (
-                  <p className="text-base leading-7 text-muted-foreground">{articleSummary}</p>
-                ) : null}
+              <div className="relative">
+                {/* Hero Section with Featured Image */}
                 {images[0] ? (
-                  <div className="relative aspect-[16/9] w-full overflow-hidden rounded-3xl border border-border bg-muted">
+                  <div className="relative aspect-[21/9] w-full overflow-hidden">
                     <ContentImage
                       src={images[0]}
                       alt={`${post.title} featured image`}
                       fill
                       className="object-cover"
-                      intrinsicWidth={1600}
-                      intrinsicHeight={900}
+                      intrinsicWidth={1920}
+                      intrinsicHeight={823}
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-8">
+                      <div className="mx-auto max-w-4xl">
+                        <div className="flex flex-wrap items-center gap-3 mb-4">
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-sm px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-white">
+                            <Tag className="h-3 w-3" />
+                            {category}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-sm px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-white">
+                            By {articleAuthor}
+                          </span>
+                        </div>
+                        <h1 className="text-4xl md:text-5xl font-bold leading-tight text-white mb-4">
+                          {post.title}
+                        </h1>
+                        {postTags.length ? (
+                          <div className="flex flex-wrap gap-2">
+                            {postTags.map((tag) => (
+                              <span key={tag} className="inline-flex items-center rounded-full bg-white/10 backdrop-blur-sm px-3 py-1 text-xs font-medium text-white">
+                                #{tag}
+                              </span>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
                   </div>
-                ) : null}
-                <RichContent html={articleHtml} className="leading-8 prose-p:my-6 prose-h2:my-8 prose-h3:my-6 prose-ul:my-6" />
-                <ArticleComments slug={post.slug} />
+                ) : (
+                  <div className="bg-gradient-to-br from-slate-900 to-slate-700 aspect-[21/9] w-full flex items-center justify-center">
+                    <div className="mx-auto max-w-4xl text-center px-8">
+                      <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-sm px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-white">
+                          <Tag className="h-3 w-3" />
+                          {category}
+                        </span>
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-sm px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-white">
+                          By {articleAuthor}
+                        </span>
+                      </div>
+                      <h1 className="text-4xl md:text-5xl font-bold leading-tight text-white mb-6">
+                        {post.title}
+                      </h1>
+                      {postTags.length ? (
+                        <div className="flex flex-wrap justify-center gap-2">
+                          {postTags.map((tag) => (
+                            <span key={tag} className="inline-flex items-center rounded-full bg-white/10 backdrop-blur-sm px-3 py-1 text-xs font-medium text-white">
+                              #{tag}
+                            </span>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                )}
+
+                {/* Content Section */}
+                <div className="relative -mt-16">
+                  <div className="mx-auto max-w-4xl">
+                    <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 md:p-12">
+                      {articleSummary ? (
+                        <div className="mb-8 p-6 bg-slate-50 rounded-xl border border-slate-200">
+                          <p className="text-lg leading-7 text-slate-700 italic">
+                            {articleSummary}
+                          </p>
+                        </div>
+                      ) : null}
+                      
+                      <div className="prose prose-lg max-w-none leading-8 prose-p:my-6 prose-h2:my-8 prose-h3:my-6 prose-ul:my-6">
+                        <RichContent html={articleHtml} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Comments Section */}
+                <div className="mt-12">
+                  <div className="mx-auto max-w-4xl">
+                    <ArticleComments slug={post.slug} />
+                  </div>
+                </div>
               </div>
             ) : null}
 
             {!isArticle ? (
               <>
                 {isPdf ? (
-                  <div className="mx-auto w-full max-w-4xl rounded-[1.8rem] border border-[#bfc9d1] bg-[#f3f6f8] p-6">
-                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#4a5e6d]">Document briefing</p>
-                    <h2 className="mt-2 text-2xl font-semibold text-[#25343f]">Reference-ready file with metadata-first layout.</h2>
-                    <p className="mt-3 text-sm leading-7 text-[#4a5e6d]">This detail view prioritizes source clarity and quick download context instead of feed-style storytelling.</p>
+                  <div className="mx-auto w-full max-w-4xl">
+                    <div className="group relative">
+                      {/* Card with 3D flip effect */}
+                      <div className="relative preserve-3d transition-transform duration-700 group-hover:rotate-y-180">
+                        {/* Front of card */}
+                        <div className="absolute inset-0 backface-hidden">
+                          <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 rounded-3xl p-1 shadow-2xl">
+                            <div className="bg-slate-950 rounded-3xl p-8 h-full">
+                              <div className="flex flex-col items-center text-center space-y-6">
+                                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-xl transform group-hover:scale-110 transition-transform duration-300">
+                                  <FileText className="h-10 w-10 text-white" />
+                                </div>
+                                <div>
+                                  <p className="text-sm font-bold text-blue-400 uppercase tracking-widest mb-2">Document Archive</p>
+                                  <h2 className="text-3xl font-bold text-white mb-2">Digital Library</h2>
+                                  <p className="text-slate-400">Professional document management system</p>
+                                </div>
+                                <div className="flex gap-4 text-slate-500 text-sm">
+                                  <div className="flex items-center gap-1">
+                                    <div className="w-2 h-2 bg-blue-500 rounded-full" />
+                                    <span>PDF Ready</span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <div className="w-2 h-2 bg-indigo-500 rounded-full" />
+                                    <span>Metadata</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Back of card */}
+                        <div className="absolute inset-0 rotate-y-180 backface-hidden">
+                          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-8 h-full">
+                            <div className="space-y-6">
+                              <h3 className="text-2xl font-bold text-white">Document Features</h3>
+                              <div className="space-y-4">
+                                <div className="flex items-start gap-3">
+                                  <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <FileText className="h-3 w-3 text-white" />
+                                  </div>
+                                  <div>
+                                    <p className="text-white font-semibold">Smart Organization</p>
+                                    <p className="text-blue-100 text-sm">Advanced metadata and categorization</p>
+                                  </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                  <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <Download className="h-3 w-3 text-white" />
+                                  </div>
+                                  <div>
+                                    <p className="text-white font-semibold">Quick Download</p>
+                                    <p className="text-blue-100 text-sm">One-click access to all documents</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 ) : null}
 
                 {isBookmark ? (
-                  <div className="mx-auto w-full max-w-4xl rounded-[1.8rem] border border-[#bfc9d1] bg-[#f6f8f9] p-6">
-                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#4a5e6d]">Social signal</p>
-                    <h2 className="mt-2 text-2xl font-semibold text-[#25343f]">Concise update stream with attached references.</h2>
+                  <div className="mx-auto w-full max-w-4xl">
+                    <div className="relative overflow-hidden">
+                      {/* Animated border card */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 rounded-3xl animate-pulse" />
+                      <div className="relative bg-slate-900 rounded-3xl p-1">
+                        <div className="bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-900 rounded-3xl p-8">
+                          <div className="text-center space-y-6">
+                            <div className="relative inline-block">
+                              <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-2xl blur-xl opacity-50 animate-pulse" />
+                              <div className="relative w-16 h-16 bg-gradient-to-br from-emerald-500 to-cyan-600 rounded-2xl flex items-center justify-center shadow-xl">
+                                <Bookmark className="h-8 w-8 text-white" />
+                              </div>
+                            </div>
+                            <div>
+                              <p className="text-sm font-bold text-emerald-400 uppercase tracking-widest mb-2">Curated Links</p>
+                              <h2 className="text-3xl font-bold text-white mb-2">Social Hub</h2>
+                              <p className="text-slate-400">Intelligent bookmark management</p>
+                            </div>
+                            <div className="flex justify-center gap-6">
+                              <div className="text-center">
+                                <div className="text-2xl font-bold text-emerald-400">∞</div>
+                                <div className="text-xs text-slate-500">References</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-2xl font-bold text-cyan-400">⚡</div>
+                                <div className="text-xs text-slate-500">Quick Access</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-2xl font-bold text-teal-400">🔗</div>
+                                <div className="text-xs text-slate-500">Connected</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 ) : null}
 
@@ -352,57 +490,166 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
             ) : null}
 
             {isClassified ? (
-              <div className="mx-auto w-full max-w-4xl rounded-2xl border border-border bg-card p-6">
-                <h2 className="text-lg font-semibold text-foreground">Business details</h2>
-                <div className="mt-4 space-y-3 text-sm text-muted-foreground">
-                  {content.website && (
-                    <div className="flex items-start gap-2">
-                      <Globe className="mt-0.5 h-4 w-4" />
-                      <a
-                        href={content.website}
-                        className="break-all text-foreground hover:underline"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {content.website}
-                      </a>
+              <div className="mx-auto w-full max-w-4xl">
+                {/* Neon-style business card */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-orange-600 to-yellow-600 rounded-3xl blur-xl opacity-50 animate-pulse" />
+                  <div className="relative bg-slate-900 rounded-3xl border border-orange-500/30 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-orange-500/10 to-transparent" />
+                    
+                    <div className="relative p-8">
+                      <div className="text-center mb-8">
+                        <div className="inline-flex items-center gap-2 mb-4">
+                          <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-xl transform hover:rotate-12 transition-transform duration-300">
+                            <Building2 className="h-8 w-8 text-white" />
+                          </div>
+                          <div className="text-left">
+                            <p className="text-sm font-bold text-orange-400 uppercase tracking-widest">Business Hub</p>
+                            <h2 className="text-3xl font-bold text-white">Contact Portal</h2>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-4">
+                        {content.website && (
+                          <div className="group relative bg-slate-800/50 rounded-2xl p-6 border border-orange-500/20 hover:border-orange-500/40 transition-all duration-300">
+                            <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-orange-500/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <div className="relative flex items-center gap-4">
+                              <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
+                                <Globe className="h-6 w-6 text-white" />
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-xs font-bold text-orange-400 uppercase tracking-wider mb-1">Website</p>
+                                <a
+                                  href={content.website}
+                                  className="text-white font-medium hover:text-orange-400 transition-colors duration-300 break-all"
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  {content.website}
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {content.phone && (
+                          <div className="group relative bg-slate-800/50 rounded-2xl p-6 border border-orange-500/20 hover:border-orange-500/40 transition-all duration-300">
+                            <div className="absolute inset-0 bg-gradient-to-r from-orange-500/10 via-yellow-500/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <div className="relative flex items-center gap-4">
+                              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg">
+                                <Phone className="h-6 w-6 text-white" />
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-xs font-bold text-orange-400 uppercase tracking-wider mb-1">Phone</p>
+                                <p className="text-white font-medium">{content.phone}</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {content.email && (
+                          <div className="group relative bg-slate-800/50 rounded-2xl p-6 border border-orange-500/20 hover:border-orange-500/40 transition-all duration-300">
+                            <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 via-red-500/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <div className="relative flex items-center gap-4">
+                              <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg">
+                                <Mail className="h-6 w-6 text-white" />
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-xs font-bold text-orange-400 uppercase tracking-wider mb-1">Email</p>
+                                <a
+                                  href={`mailto:${content.email}`}
+                                  className="text-white font-medium hover:text-orange-400 transition-colors duration-300 break-all"
+                                >
+                                  {content.email}
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {location && (
+                          <div className="group relative bg-slate-800/50 rounded-2xl p-6 border border-orange-500/20 hover:border-orange-500/40 transition-all duration-300">
+                            <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-orange-500/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <div className="relative flex items-center gap-4">
+                              <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
+                                <MapPin className="h-6 w-6 text-white" />
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-xs font-bold text-orange-400 uppercase tracking-wider mb-1">Location</p>
+                                <p className="text-white font-medium">{location}</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  )}
-                  {content.phone && (
-                    <div className="flex items-start gap-2">
-                      <Phone className="mt-0.5 h-4 w-4" />
-                      <span>{content.phone}</span>
-                    </div>
-                  )}
-                  {content.email && (
-                    <div className="flex items-start gap-2">
-                      <Mail className="mt-0.5 h-4 w-4" />
-                      <a
-                        href={`mailto:${content.email}`}
-                        className="break-all text-foreground hover:underline"
-                      >
-                        {content.email}
-                      </a>
-                    </div>
-                  )}
-                  {location && (
-                    <div className="flex items-start gap-2">
-                      <MapPin className="mt-0.5 h-4 w-4" />
-                      <span>{location}</span>
-                    </div>
-                  )}
+                  </div>
                 </div>
               </div>
             ) : null}
 
             {content.highlights?.length && !isArticle ? (
-              <div className={cn("mt-8 rounded-2xl border border-border bg-card p-6", isClassified ? "mx-auto w-full max-w-4xl" : "")}>
-                <h2 className="text-lg font-semibold text-foreground">Highlights</h2>
-                <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-                  {content.highlights.map((item) => (
-                    <li key={item}>• {item}</li>
-                  ))}
-                </ul>
+              <div className={cn("mt-8", isClassified ? "mx-auto w-full max-w-4xl" : "")}>
+                {/* Holographic-style highlights card */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-3xl opacity-20 animate-pulse" />
+                  <div className="relative bg-slate-900 rounded-3xl border border-purple-500/30 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-purple-500/10 to-pink-500/10" />
+                    
+                    <div className="relative p-8">
+                      <div className="text-center mb-8">
+                        <div className="inline-flex items-center gap-3 mb-4">
+                          <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl transform hover:rotate-180 transition-transform duration-500">
+                            <Sparkles className="h-8 w-8 text-white" />
+                          </div>
+                          <div className="text-left">
+                            <p className="text-sm font-bold text-cyan-400 uppercase tracking-widest">Feature Matrix</p>
+                            <h2 className="text-3xl font-bold text-white">Core Highlights</h2>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="grid gap-4">
+                        {content.highlights.map((item, index) => (
+                          <div key={item} className="group relative">
+                            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <div className="relative bg-slate-800/50 rounded-2xl p-6 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300">
+                              <div className="flex items-start gap-4">
+                                <div className="relative">
+                                  <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                                    <span className="text-white font-bold">{index + 1}</span>
+                                  </div>
+                                  <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl opacity-0 group-hover:opacity-30 blur-md transition-opacity duration-300" />
+                                </div>
+                                <div className="flex-1">
+                                  <p className="text-white font-medium leading-relaxed group-hover:text-cyan-400 transition-colors duration-300">{item}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      <div className="mt-8 flex justify-center">
+                        <div className="flex gap-8 text-center">
+                          <div className="relative">
+                            <div className="w-3 h-3 bg-cyan-500 rounded-full animate-pulse" />
+                            <div className="absolute inset-0 bg-cyan-500 rounded-full animate-ping" />
+                          </div>
+                          <div className="relative">
+                            <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse delay-75" />
+                            <div className="absolute inset-0 bg-purple-500 rounded-full animate-ping delay-75" />
+                          </div>
+                          <div className="relative">
+                            <div className="w-3 h-3 bg-pink-500 rounded-full animate-pulse delay-150" />
+                            <div className="absolute inset-0 bg-pink-500 rounded-full animate-ping delay-150" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             ) : null}
 

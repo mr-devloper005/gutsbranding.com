@@ -183,6 +183,66 @@ export function TaskPostCard({
     )
   }
 
+  // Unique design for article cards
+  if (variant === 'article') {
+    return (
+      <Link href={href} className="group flex h-full flex-col overflow-hidden transition-all duration-500 hover:-translate-y-2">
+        <div className={`relative ${imageAspect} overflow-hidden bg-gradient-to-br from-slate-900 to-slate-700`}>
+          <ContentImage src={image} alt={altText} fill sizes={imageSizes} quality={75} className="object-cover transition-all duration-700 group-hover:scale-[1.08] group-hover:rotate-1" intrinsicWidth={960} intrinsicHeight={720} />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+          
+          <div className="absolute left-4 top-4">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 backdrop-blur-sm px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-900 shadow-lg">
+              <Tag className="h-3 w-3" />
+              {category}
+            </span>
+          </div>
+          
+          <div className="absolute right-4 top-4">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-white shadow-lg">
+              <FileText className="h-3 w-3" />
+              Article
+            </span>
+          </div>
+          
+          <div className="absolute bottom-0 left-0 right-0 p-6">
+            <div className="flex items-center gap-2 text-white/80 text-xs font-medium uppercase tracking-[0.15em]">
+              <div className="h-px bg-white/30 flex-1" />
+              <span>Featured Story</span>
+              <div className="h-px bg-white/30 flex-1" />
+            </div>
+          </div>
+        </div>
+        
+        <div className="relative flex flex-1 flex-col bg-gradient-to-br from-white via-slate-50 to-slate-100 p-6">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600" />
+          
+          <h3 className="line-clamp-2 text-[1.4rem] font-bold leading-tight text-slate-900 group-hover:text-blue-600 transition-colors duration-300">
+            {post.title}
+          </h3>
+          
+          <p className="mt-4 line-clamp-4 text-sm leading-7 text-slate-600">
+            {getExcerpt(content.description || post.summary) || 'Read this insightful article.'}
+          </p>
+          
+          <div className="mt-auto pt-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs text-slate-500">
+                <div className="h-2 w-2 rounded-full bg-blue-600" />
+                <span className="font-medium">5 min read</span>
+              </div>
+              <div className="flex items-center gap-1 text-blue-600 font-semibold text-sm group-hover:gap-2 transition-all duration-300">
+                <span>Read More</span>
+                <ArrowUpRight className="h-4 w-4" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Link>
+    )
+  }
+
   return (
     <Link href={href} className={`group flex h-full flex-col overflow-hidden transition duration-300 ${visualVariant.frame}`}>
       <div className={`relative ${imageAspect} overflow-hidden bg-[#ede2dc]`}>

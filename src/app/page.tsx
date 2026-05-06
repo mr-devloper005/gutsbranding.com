@@ -105,7 +105,7 @@ function getDirectoryTone(brandPack: string) {
 
 function getEditorialTone() {
   return {
-    shell: 'bg-transparent text-[#25343f]',
+    shell: 'bg-[#eaefef] text-[#25343f]',
     panel: 'atelier-panel',
     soft: 'glass-ribbon border border-[#bfc9d1]',
     muted: 'text-[#4a5e6d]',
