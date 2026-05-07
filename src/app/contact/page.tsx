@@ -1,3 +1,5 @@
+'use client'
+
 import { Building2, FileText, Image as ImageIcon, Mail, MapPin, Phone, Sparkles, Bookmark } from 'lucide-react'
 import { NavbarShell } from '@/components/shared/navbar-shell'
 import { Footer } from '@/components/shared/footer'
@@ -5,6 +7,9 @@ import { SITE_CONFIG } from '@/lib/site-config'
 import { getFactoryState } from '@/design/factory/get-factory-state'
 import { getProductKind } from '@/design/factory/get-product-kind'
 import { CONTACT_PAGE_OVERRIDE_ENABLED, ContactPageOverride } from '@/overrides/contact-page'
+import { useState } from 'react'
+
+const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'contact@gutsbranding.com'
 
 function getTone(kind: ReturnType<typeof getProductKind>) {
   if (kind === 'directory') {
@@ -18,11 +23,11 @@ function getTone(kind: ReturnType<typeof getProductKind>) {
   }
   if (kind === 'editorial') {
     return {
-      shell: 'bg-[#fbf6ee] text-[#241711]',
-      panel: 'border border-[#dcc8b7] bg-[#fffdfa]',
-      soft: 'border border-[#e6d6c8] bg-[#fff4e8]',
-      muted: 'text-[#6e5547]',
-      action: 'bg-[#241711] text-[#fff1e2] hover:bg-[#3a241b]',
+      shell: 'bg-[#eaefef] text-[#25343f]',
+      panel: 'atelier-panel',
+      soft: 'glass-ribbon border border-[#bfc9d1]',
+      muted: 'text-[#4a5e6d]',
+      action: 'bg-[#25343f] text-[#eaefef] hover:bg-[#1d2a33]',
     }
   }
   if (kind === 'visual') {
@@ -51,6 +56,44 @@ export default function ContactPage() {
   const { recipe } = getFactoryState()
   const productKind = getProductKind(recipe)
   const tone = getTone(productKind)
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    
+    try {
+      // Create mailto link with form data
+      const subject = encodeURIComponent(formData.subject)
+      const body = encodeURIComponent(
+        `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+      )
+      
+      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`
+      setSubmitStatus('success')
+      
+      // Reset form
+      setFormData({ name: '', email: '', subject: '', message: '' })
+    } catch (error) {
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }))
+  }
   const lanes =
     productKind === 'directory'
       ? [
@@ -98,12 +141,65 @@ export default function ContactPage() {
 
           <div className={`rounded-[2rem] p-7 ${tone.panel}`}>
             <h2 className="text-2xl font-semibold">Send a message</h2>
-            <form className="mt-6 grid gap-4">
-              <input className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" placeholder="Your name" />
-              <input className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" placeholder="Email address" />
-              <input className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" placeholder="What do you need help with?" />
-              <textarea className="min-h-[180px] rounded-2xl border border-current/10 bg-transparent px-4 py-3 text-sm" placeholder="Share the full context so we can respond with the right next step." />
-              <button type="submit" className={`inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-semibold ${tone.action}`}>Send message</button>
+            <p className={`mt-2 text-sm ${tone.muted}`}>
+              You can reach us directly at <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold underline">{CONTACT_EMAIL}</a>
+            </p>
+            
+            {submitStatus === 'success' && (
+              <div className={`mt-4 p-3 rounded-lg bg-green-100 border border-green-200 text-green-800 text-sm`}>
+                Email client opened successfully! Please send the email to complete your submission.
+              </div>
+            )}
+            
+            {submitStatus === 'error' && (
+              <div className={`mt-4 p-3 rounded-lg bg-red-100 border border-red-200 text-red-800 text-sm`}>
+                Failed to open email client. Please email us directly at {CONTACT_EMAIL}
+              </div>
+            )}
+            
+            <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
+              <input 
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" 
+                placeholder="Your name" 
+              />
+              <input 
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" 
+                placeholder="Email address" 
+              />
+              <input 
+                type="text"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                required
+                className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" 
+                placeholder="What do you need help with?" 
+              />
+              <textarea 
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                className="min-h-[180px] rounded-2xl border border-current/10 bg-transparent px-4 py-3 text-sm" 
+                placeholder="Share the full context so we can respond with the right next step." 
+              />
+              <button 
+                type="submit" 
+                disabled={isSubmitting}
+                className={`inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-semibold ${tone.action} ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                {isSubmitting ? 'Opening email client...' : 'Send message'}
+              </button>
             </form>
           </div>
         </section>
