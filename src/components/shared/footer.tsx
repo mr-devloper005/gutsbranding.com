@@ -147,7 +147,7 @@ export function Footer() {
     return (
       <footer className="border-t border-[#bfc9d1] bg-[radial-gradient(circle_at_12%_0%,rgba(255,155,81,0.2),transparent_28%),linear-gradient(180deg,#f7f9fa_0%,#eaf0f2_100%)] text-[#25343f]">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr_0.9fr]">
+          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr_0.9fr_0.9fr]">
             <div>
               <div className="glass-ribbon inline-flex items-center gap-2 rounded-full border border-[#bfc9d1] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#4a5e6d]">
                 <Sparkles className="h-3.5 w-3.5" />
@@ -170,6 +170,14 @@ export function Footer() {
                 {footerLinks.company.map((item) => (
                   <li key={item.name}><Link href={item.href} className="hover:text-[#25343f]">{item.name}</Link></li>
                 ))}
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#4a5e6d]">Support & Legal</h4>
+              <ul className="mt-4 space-y-3 text-sm">
+                <li><Link href="/help" className="hover:text-[#25343f]">Help Center</Link></li>
+                <li><Link href="/privacy" className="hover:text-[#25343f]">Privacy</Link></li>
+                <li><Link href="/terms" className="hover:text-[#25343f]">Terms</Link></li>
               </ul>
             </div>
           </div>
