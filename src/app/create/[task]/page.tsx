@@ -36,7 +36,7 @@ type Field = {
 const FORM_CONFIG: Record<TaskKey, { title: string; description: string; fields: Field[] }> = {
   listing: {
     title: "Create Business Listing",
-    description: "Add a local-only listing with business details.",
+    description: "Add a business listing with details.",
     fields: [
       { key: "title", label: "Listing title", type: "text", required: true },
       { key: "summary", label: "Short summary", type: "textarea", required: true },
@@ -54,7 +54,7 @@ const FORM_CONFIG: Record<TaskKey, { title: string; description: string; fields:
   },
   classified: {
     title: "Create Classified",
-    description: "Add a local-only classified ad.",
+    description: "Add a classified ad.",
     fields: [
       { key: "title", label: "Ad title", type: "text", required: true },
       { key: "summary", label: "Short summary", type: "textarea", required: true },
@@ -71,7 +71,7 @@ const FORM_CONFIG: Record<TaskKey, { title: string; description: string; fields:
   },
   article: {
     title: "Create Article",
-    description: "Write a local-only article post.",
+    description: "Write an article post.",
     fields: [
       { key: "title", label: "Article title", type: "text", required: true },
       { key: "summary", label: "Short summary", type: "textarea", required: true },
@@ -83,7 +83,7 @@ const FORM_CONFIG: Record<TaskKey, { title: string; description: string; fields:
   },
   image: {
     title: "Create Image Share",
-    description: "Share image-only content locally.",
+    description: "Share image-only content.",
     fields: [
       { key: "title", label: "Image title", type: "text", required: true },
       { key: "summary", label: "Short summary", type: "textarea", required: true },
@@ -95,7 +95,7 @@ const FORM_CONFIG: Record<TaskKey, { title: string; description: string; fields:
   },
   profile: {
     title: "Create Profile",
-    description: "Create a local-only business profile.",
+    description: "Create a business profile.",
     fields: [
       { key: "brandName", label: "Brand name", type: "text", required: true },
       { key: "summary", label: "Short summary", type: "textarea", required: true },
@@ -106,7 +106,7 @@ const FORM_CONFIG: Record<TaskKey, { title: string; description: string; fields:
   },
   social: {
     title: "Create Social Post",
-    description: "Publish a local-only social update.",
+    description: "Publish a social update.",
     fields: [
       { key: "title", label: "Post title", type: "text", required: true },
       { key: "summary", label: "Short summary", type: "textarea", required: true },
@@ -118,7 +118,7 @@ const FORM_CONFIG: Record<TaskKey, { title: string; description: string; fields:
   },
   sbm: {
     title: "Create Bookmark",
-    description: "Submit a local-only social bookmark.",
+    description: "Submit a social bookmark.",
     fields: [
       { key: "title", label: "Bookmark title", type: "text", required: true },
       { key: "summary", label: "Short summary", type: "textarea", required: true },
@@ -130,7 +130,7 @@ const FORM_CONFIG: Record<TaskKey, { title: string; description: string; fields:
   },
   pdf: {
     title: "Create PDF Entry",
-    description: "Add a local-only PDF resource.",
+    description: "Add a PDF resource.",
     fields: [
       { key: "title", label: "PDF title", type: "text", required: true },
       { key: "summary", label: "Short summary", type: "textarea", required: true },
@@ -142,7 +142,7 @@ const FORM_CONFIG: Record<TaskKey, { title: string; description: string; fields:
   },
   org: {
     title: "Create Organization",
-    description: "Create a local-only organization profile.",
+    description: "Create an organization profile.",
     fields: [
       { key: "brandName", label: "Organization name", type: "text", required: true },
       { key: "summary", label: "Short summary", type: "textarea", required: true },
@@ -153,7 +153,7 @@ const FORM_CONFIG: Record<TaskKey, { title: string; description: string; fields:
   },
   comment: {
     title: "Create Blog Comment",
-    description: "Store a local-only blog comment entry.",
+    description: "Store a blog comment entry.",
     fields: [
       { key: "title", label: "Comment title", type: "text", required: true },
       { key: "summary", label: "Short summary", type: "textarea", required: true },
@@ -289,7 +289,6 @@ export default function CreateTaskPage() {
         <div className="rounded-3xl border border-border bg-card p-8 shadow-sm">
           <div className="flex flex-wrap gap-2">
             <Badge variant="secondary">{taskConfig.label}</Badge>
-            <Badge variant="outline">Local-only</Badge>
           </div>
 
           <div className="mt-6 grid gap-6">
@@ -378,7 +377,7 @@ export default function CreateTaskPage() {
           <div className="mt-8 flex flex-wrap gap-3">
             <Button onClick={handleSubmit}>
               <Save className="mr-2 h-4 w-4" />
-              Save locally
+              Save
             </Button>
             <Button variant="ghost" asChild>
               <Link href={taskConfig.route}>
