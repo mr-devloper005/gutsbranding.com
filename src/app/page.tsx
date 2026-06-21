@@ -319,21 +319,7 @@ function EditorialHome({
           description: 'Investigations, explainers, opinion, and long-form reporting.',
         },
       ]
-  const fallbackArticleTeasers = [
-    {
-      title: 'Why city budgets are becoming the next major election issue',
-      slug: 'why-city-budgets-are-becoming-the-next-major-election-issue',
-    },
-    {
-      title: 'The school funding gap hidden inside district reporting',
-      slug: 'the-school-funding-gap-hidden-inside-district-reporting',
-    },
-    {
-      title: 'How hospitals are preparing for a hotter decade',
-      slug: 'how-hospitals-are-preparing-for-a-hotter-decade',
-    },
-  ]
-  const articleTeasers = issueItems.slice(0, 3).map((item) => ({ title: item.title, slug: item.slug }))
+  const latestArticles = articlePosts.slice(0, 4).map((post) => ({ title: post.title, slug: post.slug }))
 
   return (
     <main className={tone.shell}>
@@ -341,10 +327,6 @@ function EditorialHome({
         <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
           <div className="relative">
             <div className="pointer-events-none absolute -left-6 -top-6 hidden h-24 w-24 rounded-full border border-[#bfc9d1] bg-white/55 lg:block" />
-            <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] ${tone.badge}`}>
-              <FileText className="h-3.5 w-3.5" />
-              Premium editorial desk
-            </span>
             <h1 className={`mt-6 max-w-4xl text-5xl font-semibold tracking-[-0.06em] sm:text-6xl ${tone.title}`}>
               Long-form reporting with a front page built for trust, depth, and citation-led reading.
             </h1>
@@ -402,12 +384,19 @@ function EditorialHome({
               <h3 className="text-xl font-semibold">{task.label}</h3>
               <p className={`mt-3 text-sm leading-7 ${tone.muted}`}>{task.description}</p>
               {task.key === 'fallback-articles' || task.key === 'article' ? (
-                <div className="mt-4 space-y-2 border-t border-[#bfc9d1] pt-4">
-                  {(articleTeasers.length ? articleTeasers : fallbackArticleTeasers).map((story) => (
-                    <span key={story.slug} className="block text-sm font-medium text-[#25343f]">
-                      {story.title}
-                    </span>
-                  ))}
+                <div className="mt-4 border-t border-[#bfc9d1] pt-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#25343f]/75">Latest Articles</p>
+                  <div className="mt-3 space-y-2">
+                    {latestArticles.length ? (
+                      latestArticles.map((story) => (
+                        <span key={story.slug} className="block text-sm font-medium text-[#25343f]">
+                          {story.title}
+                        </span>
+                      ))
+                    ) : (
+                      <span className={`block text-sm ${tone.muted}`}>No articles published yet.</span>
+                    )}
+                  </div>
                 </div>
               ) : null}
             </Link>
